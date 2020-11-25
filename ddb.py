@@ -55,7 +55,7 @@ def scanToFile(filterParams=None, filepath='bucket/dump_ddb.raw'):
             for item in items:
                 json_item = json.dumps(item, cls=DecimalEncoder)
                 json_item = json.loads(json_item) # saída pronta
-                wf.writeFile(filepath, json_item) # Escrevendo itens em arquivo... apenas uma saida...
+                wf.writeFile(filepath, json_item) # Escrevendo itens em arquivo. TODO: melhoria otimizar I/O
 
     except ClientError as e:
         print(e.response['Error']['Message'])
@@ -134,6 +134,16 @@ def search(filterParams, projectionExpression=None):
 
     except ClientError as e:
         print(e.response['Error']['Message'])
+
+
+# Inserir objeto, ou sobrescrevê-lo se as chaves já existirem
+def insert(dict_obj):
+    try:
+        # try to insert a single registry
+        response = table.put_item(
+            Item=dict_obj
+        )
+        print(response)
 
 
 # Efetuar uma exclusão de um registro do DynamoDB
